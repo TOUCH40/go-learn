@@ -14,12 +14,22 @@ var mutex sync.Mutex
 func main() {
 	wg.Add(2)
 	go incrementor("Foo:")
-	go incrementor("Bar:")
+	go incrementor2("Bar:")
 	wg.Wait()
 	fmt.Println("Final Counter:", counter)
 }
 
 func incrementor(s string) {
+	for i := 0; i < 20; i++ {
+		time.Sleep(time.Duration(rand.Intn(20)) * time.Millisecond)
+		mutex.Lock()
+		counter++
+		fmt.Println(s, i, "Counter:", counter)
+		mutex.Unlock()
+	}
+	wg.Done()
+}
+func incrementor2(s string) {
 	for i := 0; i < 20; i++ {
 		time.Sleep(time.Duration(rand.Intn(20)) * time.Millisecond)
 		mutex.Lock()
