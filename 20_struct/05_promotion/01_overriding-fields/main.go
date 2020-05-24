@@ -26,7 +26,7 @@ func main() {
 		First:         "Double Zero Seven",
 		LicenseToKill: true,
 	}
-
+	p1.Last = "小小"
 	p2 := doubleZero{
 		person: person{
 			First: "Miss",
@@ -38,6 +38,6 @@ func main() {
 	}
 
 	// fields and methods of the inner-type are promoted to the outer-type
-	fmt.Println(p1.First, p1.person.First)
+	fmt.Println(p1.Last, p1.person.Last)
 	fmt.Println(p2.First, p2.person.First)
 }
