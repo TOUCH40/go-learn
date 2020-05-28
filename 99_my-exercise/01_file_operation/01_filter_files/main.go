@@ -14,7 +14,7 @@ type config struct {
 	Path string `yaml:"path"`
 }
 
-var conf config
+var conf *config = new(config)
 
 func main() {
 	configFile, err := ioutil.ReadFile(`conf.yaml`)
@@ -22,7 +22,6 @@ func main() {
 		fmt.Println(err.Error())
 		return
 	}
-
 	err = yaml.Unmarshal(configFile, conf)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -33,9 +32,9 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	for _, s := range ss {
-
-		fmt.Println(s)
+	newFiles := gen(ss, "D:")
+	for s := range newFiles {
+		fmt.Println(s[0], s[1])
 	}
 }
 
@@ -87,10 +86,22 @@ func isFileNameEndWith(name string, extension string) (bool, error) {
 
 func gen(paths []string, target string) <-chan [2]string {
 	out := make(chan [2]string)
-	for _, path := range paths {
-		changePath := [2]string{path, strings.Replace(path, conf.Path, target, 1)}
-		out <- changePath
-	}
-	close(out)
+	go func() {
+		for _, path := range paths {
+			changePath := [2]string{path, strings.Replace(path, conf.Path, target, 1)}
+			out <- changePath
+		}
+		close(out)
+	}()
 	return out
 }
+
+// func fanOut(in <-chan [2]string, n int) <-chan bool {
+// 	out := make(chan bool)
+// 	go func() {
+
+// 	}()
+// 	return out
+// }
+
+// func copyFiles(in<-chan [)
