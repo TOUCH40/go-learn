@@ -14,7 +14,7 @@ type config struct {
 	Path string `yaml:"path"`
 }
 
-var conf *config = new(config)
+var conf = new(config)
 
 func main() {
 	configFile, err := ioutil.ReadFile(`conf.yaml`)
