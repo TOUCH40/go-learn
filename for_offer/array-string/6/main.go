@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-
-	"sourcegraph.com/sqs/goreturns/returns"
 )
 
 func main() {
@@ -12,13 +10,40 @@ func main() {
 }
 
 func spiralOrder(matrix [][]int) []int {
-	if(len(matrix)==0){
+	if len(matrix) == 0 {
 		return []int{}
 	}
 	l, r, t, b := 0, len(matrix[0])-1, 0, len(matrix)-1
-	res:=[]int{}
+	res := []int{}
 	for {
-		for 
+		for i := l; i <= r; i++ {
+			res = append(res, matrix[t][i])
+		}
+		t++
+		if t > b {
+			break
+		}
+		for i := t; i <= b; i++ {
+			res = append(res, matrix[i][r])
+		}
+		r--
+		if l > r {
+			break
+		}
+		for i := r; i >= l; i-- {
+			res = append(res, matrix[b][i])
+		}
+		b--
+		if t > b {
+			break
+		}
+		for i := b; i >= t; i-- {
+			res = append(res, matrix[i][l])
+		}
+		l++
+		if l > r {
+			break
+		}
 	}
 	return res
 }
