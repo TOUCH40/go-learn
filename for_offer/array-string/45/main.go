@@ -1,41 +1,81 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 func main() {
-	n := []int{12, 43, 23, 534, 5453, 64, 11, 233, 44}
-	minNumber(n)
-	fmt.Println(n)
+	n := []int{3, 43, 48, 94, 85, 33, 64, 32, 63, 66}
+
+	fmt.Println(minNumber(n))
 }
 
-func minNumber(nums []int) {
-	quickSort(nums, 0, len(nums)-1)
+func minNumber(nums []int) string {
+	words := []string{}
+	for _, item := range nums {
+		words = append(words, strconv.Itoa(item))
+	}
+	quickSort(words, 0, len(nums)-1)
+	return strings.Join(words, "")
 }
 
-func quickSort(a []int, l int, r int) {
+func quickSort(a []string, l int, r int) {
 	// 跳出
 	if l >= r {
 		return
 	}
 	// 基准，左，右
-	pivot, ol, or := l, l+1, r
+	pivot, ol, or := a[l], l, r
 	for ol < or {
-		for ol < or && a[or] > a[pivot] {
+		for ol < or && (compare(a[or], pivot) == 0 || compare(a[or], pivot) == 1) {
 			or--
 		}
-		for ol < or && a[ol] < a[pivot] {
+		a[ol] = a[or]
+		for ol < or && compare(pivot, a[ol]) == 1 {
 			ol++
 		}
-		if ol < or {
-			a[ol], a[or] = a[or], a[ol]
-		}
+		a[or] = a[ol]
 	}
-	if a[pivot] > a[ol] {
-		a[pivot], a[ol] = a[ol], a[pivot]
-	}
+	a[ol] = pivot
 	quickSort(a, l, ol-1)
 	quickSort(a, ol+1, r)
 }
+
+func compare(a string, b string) int {
+	i1, _ := strconv.Atoi(a + b)
+	i2, _ := strconv.Atoi(b + a)
+	if i1 > i2 {
+		return 1
+	} else if i1 < i2 {
+		return -1
+	} else {
+		return 0
+	}
+}
+
+// func quickSort(a []int, l int, r int) {
+// 	// 跳出
+// 	if l >= r {
+// 		return
+// 	}
+// 	// 基准，左，右
+// 	pivot, ol, or := a[l], l, r
+// 	for ol < or {
+// 		for ol < or && a[or] >= pivot {
+// 			or--
+// 		}
+// 		a[ol] = a[or]
+// 		for ol < or && a[ol] < pivot {
+// 			ol++
+// 		}
+// 		a[or] = a[ol]
+// 	}
+// 	a[ol] = pivot
+// 	quickSort(a, l, ol-1)
+// 	quickSort(a, ol+1, r)
+// }
 
 // 快速排序实现，由于要二分递归，所以要传入每次排序的起始和结束的索引
 func quick_sorting(data []int, start, end int) {
