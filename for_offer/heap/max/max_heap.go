@@ -31,3 +31,15 @@ func (h hp) Less() int           {}
 func (h hp) Swap() int           {}
 func (h *hp) Push(v interface{}) {}
 func (h *hp) Pop() interface{}   {}
+
+func main() {
+pos1:
+	for i := 0; i < 10; i++ {
+		for j := 0; j < 10; j++ {
+			if i == j && j == 3 {
+				goto pos1
+
+			}
+		}
+	}
+}
