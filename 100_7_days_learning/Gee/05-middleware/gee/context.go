@@ -71,6 +71,10 @@ func (c *Context) Param(key string) string {
 	return value
 }
 
+func (c *Context) Fail(code int, err string) {
+	c.JSON(code, H{"message": err})
+}
+
 // 很牛啊，看半天才看懂
 func (c *Context) Next() {
 	c.index++
