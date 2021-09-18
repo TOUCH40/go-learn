@@ -15,6 +15,7 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 		Path:   req.URL.Path,
 		Method: req.Method,
 		index:  -1,
+		engine *Engine
 	}
 }
 
@@ -48,6 +49,7 @@ type Context struct {
 	StatusCode int
 	handlers   []HandlerFunc
 	index      int
+	engine *engine
 }
 
 func (c *Context) String(code int, format string, values ...interface{}) {
@@ -82,5 +84,15 @@ func (c *Context) Next() {
 	// 若前面的中间件未调用next方法，帮助它调用后面的中间件内容。
 	for ; c.index < s; c.index++ {
 		c.handlers[c.index](c)
+	}
+}
+
+// new feature
+
+func (c *Context) HTML(code, name string, data interface{}) {
+	c.SetHeader("Content-Type", "text/html")
+	c.Status(code)
+	if err := c.engine.htmlTemplates.ExecuteTemplate(c.Write, name, data); err != nil {
+		c.Fail(500, err.Error())
 	}
 }

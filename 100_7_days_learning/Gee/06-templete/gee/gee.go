@@ -1,6 +1,7 @@
 package gee
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"path"
@@ -8,20 +9,6 @@ import (
 )
 
 type HandlerFunc func(*Context)
-
-type (
-	RouterGroup struct {
-		prefix     string
-		middleware []HandlerFunc // support middleware
-		// parent     *RouterGroup  // support nesting
-		engine *Engine // all groups share a Engine instance
-	}
-	Engine struct {
-		*RouterGroup
-		router *router
-		groups []*RouterGroup // store all group
-	}
-)
 
 // new is the constructor of gee.Engine
 func New() *Engine {
@@ -72,6 +59,7 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	c := newContext(w, req)
+	c.engine = engine
 	c.handlers = middlewares
 	engine.router.handle(c)
 }
@@ -102,4 +90,28 @@ func (group *RouterGroup) Static(relativePath, root string) {
 	urlPattern := path.Join(relativePath, "/*filepath")
 	// Register GET handlers
 	group.GET(urlPattern, handler)
+}
+
+type (
+	RouterGroup struct {
+		prefix     string
+		middleware []HandlerFunc // support middleware
+		// parent     *RouterGroup  // support nesting
+		engine *Engine // all groups share a Engine instance
+	}
+	Engine struct {
+		*RouterGroup
+		router        *router
+		groups        []*RouterGroup     // store all group
+		htmlTemplates *template.Template //
+		funcMap       template.FuncMap
+	}
+)
+
+func (engine *Engine) SetFuncMap(funcMap template.FuncMap) {
+	engine.funcMap = funcMap
+}
+
+func (engine *Engine) LoadHTMLGlob(pattern string) {
+	engine.htmlTemplates = template.Must(template.New("").Funcs(engine.funcMap).ParseGlob(pattern))
 }
