@@ -73,11 +73,11 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 	return nil, nil
 }
 
-func (c *Context) HTML(code int, html string) {
-	c.SetHeader("Content-Type", "text/html")
-	c.Status(code)
-	c.Writer.Write(([]byte)(html))
-}
+// func (c *Context) HTML(code int, html string) {
+// 	c.SetHeader("Content-Type", "text/html")
+// 	c.Status(code)
+// 	c.Writer.Write(([]byte)(html))
+// }
 
 // addition
 func (r *router) getRoutes(method string) []*node {

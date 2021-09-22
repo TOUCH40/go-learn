@@ -81,7 +81,7 @@ func (group *RouterGroup) createStaticHandler(relativePath string, fs http.FileS
 			c.Status(http.StatusNotFound)
 			return
 		}
-		fileServer.ServeHTTP(c.Write, c.req)
+		fileServer.ServeHTTP(c.Writer, c.Req)
 	}
 }
 
@@ -103,8 +103,8 @@ type (
 		*RouterGroup
 		router        *router
 		groups        []*RouterGroup     // store all group
-		htmlTemplates *template.Template //
-		funcMap       template.FuncMap
+		htmlTemplates *template.Template // for html render
+		funcMap       template.FuncMap   // for html render
 	}
 )
 
